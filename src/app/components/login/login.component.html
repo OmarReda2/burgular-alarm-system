@@ -1,0 +1,56 @@
+<div id="login">
+  <div id="background" class="position-relative overflow-hidden vh-100 login"></div>
+
+
+
+
+  <div class="login-cont top-50 start-50 position-absolute translate-middle rounded-3 login-cont">
+
+    <div class="p-3 text-white text-opacity-75">
+      <form>
+        <div class="mb-3">
+          <h1 class=" ">login</h1>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label fs-5">Email </label>
+          <input type="email" placeholder="email" class="form-control bg-dark bg-opacity-25 border-0 text-dark"
+            name="email" [(ngModel)]="email" >
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label fs-5">Password</label>
+          <input type="password" placeholder="password" class="form-control bg-dark bg-opacity-25 border-0"
+            name="password" [(ngModel)]="password" >
+        </div>
+
+        <div class="text-danger mb-2" *ngIf="this.auth.message">{{this.auth.clearValidation(this.auth.message) }}</div>
+
+        <div class="mt-1 mb-3">
+          <button type="submit" class="btn btn-primary w-25 ps-2 ps-sm-3 py-3 py-sm-1 " (click)="login(); "
+          [disabled]="auth.isLogin.value && !access">
+          <span *ngIf="!auth.isLogin.value || access ">submit</span>
+          <span *ngIf="auth.isLogin.value && !access">
+            <i class="fa-solid fa-circle-notch fa-spin" style="--fa-animation-duration: .7s;"></i>
+          </span>
+        </button>
+
+        <span class="mx-2">or</span>
+
+        <button type="submit" class="btn btn-success w-50" (click)="freeAccess()"
+          [disabled]="access" >
+          <span *ngIf="!access">try free access</span>
+          <span *ngIf="access">
+            <i class="fa-solid fa-circle-notch fa-spin" style="--fa-animation-duration: .7s;"></i>
+          </span>
+        </button>
+        </div>
+
+
+
+      </form>
+      <div class="mt-2 fs-6">Need Account ?<span style="cursor: pointer;" class="text-primary " routerLink="/register">
+          register</span></div>
+    </div>
+  </div>
+
+</div>

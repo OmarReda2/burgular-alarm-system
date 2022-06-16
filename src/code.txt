@@ -1,0 +1,331 @@
+*******authService*********import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  constructor(private fireAuth: AngularFireAuth, private router: Router) {
+
+
+   }
+
+   testObs(x:any){
+
+   }
+  test = new BehaviorSubject('u')
+  test2 = this.test
+
+
+
+
+  // login method
+  login(email: string, password: string) {
+    this.fireAuth.signInWithEmailAndPassword(email, password).then(
+      () => {
+        localStorage.setItem('token', 'true');
+        this.router.navigate(['/dashboard']);
+      },
+      (err) => {
+        alert(err.message);
+      }
+    );
+  }
+
+
+
+  // register methode
+  register(email: string, password: string) {
+    this.fireAuth.createUserWithEmailAndPassword(email, password).then(
+      () => {
+        alert('register success');
+        this.router.navigate(['/login']);
+      },
+      (err) => {
+        alert(err.message);
+        this.router.navigate(['/register']);
+      }
+    );
+  }
+
+
+  // sign out
+  logOut() {
+    this.fireAuth.signOut().then(
+      () => {
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      },
+      (err) => {
+        alert(err.message);
+      }
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+********dataService*******
+import { Student } from './../model/student';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DataService {
+  constructor(private afs: AngularFirestore) {}
+
+  // add student
+  addStudent(student: Student, myCollection:any) {
+    student.id = this.afs.createId();
+    return this.afs.collection(`/${myCollection}`).add(student);
+  }
+
+  // get all students
+  getAllStudents(myCollection:any) {
+    return this.afs.collection(`/${myCollection}`).snapshotChanges();
+
+  }
+
+  // delete student
+  deleteStudent(student:Student){
+    return this.afs.doc('/Student/' + student.id)
+  }
+
+  // update student
+  // updateStudent(student:Student){
+  //   this.deleteStudent(student);
+  //   this.addStudent(student)
+  // }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+******LoginComponent*********
+import { BehaviorSubject } from 'rxjs';
+import { AuthService } from './../../shared/auth.service';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+
+  constructor(private auth: AuthService) { }
+  email: string = ''
+  password: string = ''
+  test: string = ''
+
+
+  login() {
+    if (this.email == '') {
+      alert('please enter email')
+      return
+
+    }
+
+    if (this.password == '') {
+      alert('please enter password')
+      return
+    }
+
+    this.auth.login(this.email, this.password)
+    this.auth.test.next(this.email)
+
+    this.email = ''
+    this.password = ''
+
+
+
+    // console.log(this.test);
+
+    // this.auth.test.next(this.email)
+    // console.log(this.auth.test)
+    // console.log(this.auth.test2)
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+******registerComponent********
+import { AuthService } from './../../shared/auth.service';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
+})
+export class RegisterComponent implements OnInit {
+
+  constructor(private auth:AuthService) { }
+  email:string = ''
+  password:string = ''
+
+
+
+  register() {
+    if (this.email == '') {
+      alert('please enter email')
+      return
+
+    }
+
+    if (this.password == '') {
+      alert('please enter password')
+      return
+    }
+
+    this.auth.register(this.email, this.password)
+    this.email = ''
+    this.password = ''
+  }
+  ngOnInit(): void {
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+******DashboardComponent******
+import { Component, OnInit } from '@angular/core';
+import { Student } from 'src/app/model/student';
+import { AuthService } from 'src/app/shared/auth.service';
+import { DataService } from 'src/app/shared/data.service';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements OnInit {
+
+  studentsList: Student[] = [];
+  studentObj: Student = {
+    id: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    mobile: ''
+  };
+  id: string = '';
+  first_name: string = '';
+  last_name: string = '';
+  email: string = '';
+  mobile: string = '';
+
+  constructor(private auth: AuthService, private data: DataService) { }
+
+  ngOnInit(): void {
+    this.getAllStudents();
+  }
+
+  logOut() {
+    this.auth.logOut();
+  }
+
+  getAllStudents() {
+
+    this.data.getAllStudents(this.email).subscribe(res => {
+
+      this.studentsList = res.map((e: any) => {
+        const data = e.payload.doc.data();
+        data.id = e.payload.doc.id;
+        return data;
+      })
+
+    }, err => {
+      alert('Error while fetching student data');
+    })
+
+    // this.auth.test.next('óoo')
+    console.log(this.auth.test);
+
+  }
+
+  resetForm() {
+    this.id = '';
+    this.first_name = '';
+    this.last_name = '';
+    this.email = '';
+    this.mobile = '';
+  }
+
+  addStudent() {
+    if (this.first_name == '' || this.last_name == '' || this.mobile == '' || this.email == '') {
+      alert('Fill all input fields');
+      return;
+    }
+
+    this.studentObj.id = '';
+    this.studentObj.email = this.email;
+    this.studentObj.first_name = this.first_name;
+    this.studentObj.last_name = this.last_name;
+    this.studentObj.mobile = this.mobile;
+
+    this.data.addStudent(this.studentObj,this.email);
+    this.resetForm();
+
+  }
+
+  updateStudent() {
+
+  }
+
+  deleteStudent(student: Student) {
+    if (window.confirm('Are you sure you want to delete ' + student.first_name + ' ' + student.last_name + ' ?')) {
+      this.data.deleteStudent(student);
+    }
+  }
+
+}

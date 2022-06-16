@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "fir-demo2-a8a1c": {
+      "hosting": {
+        "demo": [
+          "fir-demo2-a8a1c"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "fir-demo2-a8a1c"
+  }
+}

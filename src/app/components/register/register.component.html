@@ -1,0 +1,46 @@
+
+<div id="background" class="w-100 vh-100 position-relative register"></div>
+
+
+
+<div class=" top-50 start-50 position-absolute translate-middle rounded-3 reg-cont">
+
+  <div class="p-3 text-white text-opacity-75">
+    <form>
+      <div class="mb-3">
+        <h1 class=" ">register</h1>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label fs-5">Email </label>
+        <input type="email" placeholder="email" class="form-control bg-dark bg-opacity-25 border-0 text-dark"
+          name="email" [(ngModel)]="email">
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label fs-5">Password</label>
+        <input type="password" placeholder="password" class="form-control bg-dark bg-opacity-25 border-0"
+          name="password" [(ngModel)]="password">
+      </div>
+
+      <div class="text-danger mb-2"  *ngIf="this.auth.regMessage ">{{this.auth.clearValidation(this.auth.regMessage) }}</div>
+
+      <button type="submit" class="btn btn-primary w-25 ps-2 ps-sm-3" (click)="register(); " [disabled]="this.auth.isRegister.value">
+        <span *ngIf="!this.auth.isRegister.value">submit</span>
+        <span *ngIf="this.auth.isRegister.value">
+          <i class="fa-solid fa-circle-notch fa-spin"  style="--fa-animation-duration: .7s;"></i>
+        </span>
+      </button>
+
+
+
+    </form>
+    <div class="mt-2 fs-6">Have an account ?<span style="cursor: pointer;" class="text-primary " routerLink="/login">
+        login</span></div>
+  </div>
+</div>
+
+
+
+
+
+

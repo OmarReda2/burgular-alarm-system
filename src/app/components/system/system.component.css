@@ -1,0 +1,65 @@
+.comp-shadow {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, .15);
+  bottom: -5px;
+  transition: .2s;
+}
+
+.comp-shadow:hover {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, .3);
+  bottom: 5px;
+}
+
+.h-battery{
+  transition: 1s;
+}
+
+.progress-bar{
+  transition: 1s;
+}
+
+.door-card{
+  transition: 1s;
+}
+
+.window-card{
+  transition: 1s;
+}
+
+.motion-card{
+  transition: 1s;
+}
+
+.offcanvas-start {
+  width:100px
+}
+
+
+.rotate{
+  transform: rotate(180deg);
+}
+
+.mt-mine{
+  margin-top: 19.5px;
+}
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 440px) and (min-width: 0px) {
+  .element-comp {
+    width: 100%;
+  }
+
+}
+
+@media screen and (max-width: 460px) and (min-width: 0px) {
+  .element-2-comp {
+    width: 100%;
+  }
+
+}
